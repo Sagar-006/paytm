@@ -43,17 +43,83 @@ export const signup = async (req:Request,res:Response) => {
             firstname,
             lastname,
         })
-        const userId = user._id;
-        console.log(userId.toJSON());
+        const userId = user._id.toJSON();
+        console.log(userId);
 
-        const token = jwt.sign(userId.toJSON(), "ABCDEF123456");
+        const token = jwt.sign(userId, "ABCDEF123456");
 
-        res.json({
+        res.status(200).json({
             message:"signup successfully",
-            token
+            token:`${token}`
         })
     }
     catch(e){
         console.log(e);
     }
 }
+
+export const signin = async(req:Request,res:Response) => {
+    const {username,password} = req.body;
+
+    try{
+        const user = await User.findOne({
+            username,
+            password,
+        });
+        if(!user){
+            return res.status(511).json({
+                message:"User not found"
+            })
+        };
+
+        const userId = user._id.toJSON();
+
+        const token = jwt.sign(userId, "ABCDEF123456");
+
+        res.status(200).json({
+          message: "Signin successfully",
+          token: `${token}`,
+        });
+    }
+    catch(e){
+        console.log(e)
+    }
+}
+
+export const payment = (req:Request,res:Response) => {
+    // @ts-ignore
+    const id = req.userId;
+    console.log(id,"in payment route")
+    return res.json({
+        message:"this is payment page!"
+    })
+}
+
+export const userInfoUpdate = async(req:Request,res:Response) => {
+    // @ts-ignore
+    const _id = req.userId ;
+    console.log(_id,"in updateRoute")
+
+    try{
+
+        const user = await User.findById({_id});
+        if(!user){
+            return res.status(511).json({
+                message:"User not found"
+            })
+        }
+
+        const update = await User.updateOne({_id:_id},{$set: 
+            {password:req.body.password,
+            firstname:req.body.firstname,
+            lastname:req.body.lastname,}
+
+        })
+        res.status(200).json({
+            message:"user information updated!"
+        })
+    }
+    catch(e){
+        return res.status(500).send(e);
+    }
+} 
