@@ -1,5 +1,6 @@
 import express from 'express'
 import userRoute from './routes/userRoute.js';
+import accountRoute from './routes/accounts.js'
 import cors from 'cors'
 import { mongoConnect } from './db.js';
 
@@ -9,6 +10,8 @@ app.use(cors())
 
 
 app.use("/api/v1/user",userRoute)
+app.use("/api/v1/account", accountRoute);
+
 mongoConnect();
 
 app.listen(4000);

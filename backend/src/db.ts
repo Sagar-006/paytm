@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 
+
 export const  mongoConnect = () =>{
     mongoose.connect(
       "mongodb+srv://admin:opFnqOlLoQ2hHaS4@cluster0.eydpqwr.mongodb.net/paytm"
@@ -37,8 +38,18 @@ const userSchema = new mongoose.Schema({
     ,
 });
 
+export const User = mongoose.model("users", userSchema);
 
+const userBalance = new mongoose.Schema({
+    userId:{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'User',
+        required:true,
+    },
+    balance:{
+        type:Number,
+        required:true
+    }
+})
 
-const User  = mongoose.model("users",userSchema);
-export default  User;
-
+export const UserBalance =  mongoose.model('balance',userBalance)
