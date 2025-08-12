@@ -1,6 +1,12 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+
+interface useDebounceType{
+  value:string,
+  delay:number,
+} 
 
 const Dashboard = () => {
   const [filter,setFilter] = useState('');
@@ -22,25 +28,60 @@ const Dashboard = () => {
       setBalance(response.data.balance);
     };
     getBalance();
-    const getAllusers = async() => {
-        const allUsers = await axios.get(
-          `http://localhost:4000/api/v1/user/bulk?filter=${filter}`
-        );
-        // console.log(allUsers.data.finalData)
-        setAllUsers(allUsers.data.finalData);
-    }
-    getAllusers();
+    // const getAllusers = async() => {
+    //     const allUsers = await axios.get(
+    //       `http://localhost:4000/api/v1/user/bulk?filter=${filter}`
+    //     );
+    //     // console.log(allUsers.data.finalData)
+    //     setAllUsers(allUsers.data.finalData);
+    // }
+    // getAllusers();
 
-    const onChange = (e:any) => {
-      const filt = e.target.value;
-      console.log(filt);
-    }
+    const useDebounce = (value:string, delay:number) => {
+      const [debounced, setDebounced] = useState(value);
+      const [allUsers,setAllUsers] = useState<any>([])
+      
+
+      useEffect(() => {
+        const id =setTimeout(() => {
+          setDebounced(value);
+        }, delay);
+        return () => clearTimeout(id);
+      }, [value, delay]);
+
+      useEffect(() => {
+        if(!debounced) return;
+
+        const getUsers = async() => {
+          try{
+          const response = await axios.get(`http://localhost:4000/api/v1/user/bulk?filter=${debounced}`);
+          setAllUsers(response.data.finalData)
+        }
+        
+        catch(e){
+          const err = e as any;
+          const msg = err.response.data.message ?? err.message ?? "Error";
+          toast.error(msg)
+        }
+        }
+        getUsers();
+
+        return allUsers
+      },[debounced])
+
+      
+    };
+
+    const debouncedquery = useDebounce(filter,500);
+    console.log(debouncedquery)
+    setAllUsers(debouncedquery);
+
   };
 
   useEffect(() => {
     getData();
   }, []);
-  console.log(allUsers)
+  // console.log(allUsers)
   return (
     <div className="w-full ">
       <div className=" m-4 border-b-1 pb-7 flex justify-between items-center">
