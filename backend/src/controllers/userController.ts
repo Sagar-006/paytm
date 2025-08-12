@@ -91,14 +91,7 @@ export const signin = async (req: Request, res: Response) => {
   }
 };
 
-export const payment = (req: Request, res: Response) => {
-  // @ts-ignore
-  const id = req.userId;
-  console.log(id, "in payment route");
-  return res.json({
-    message: "this is payment page!",
-  });
-};
+
 
 export const userInfoUpdate = async (req: Request, res: Response) => {
   // @ts-ignore
@@ -132,7 +125,7 @@ export const userInfoUpdate = async (req: Request, res: Response) => {
 };
 
 export const getAllUsers = async(req:Request,res:Response) => {
-    const filter = await req.query.filter;
+    const filter = await req.query.filter || "";
 
     try{
         const response = await User.find({
@@ -151,6 +144,7 @@ export const getAllUsers = async(req:Request,res:Response) => {
         }).select('-password');
 
         const finalData = response.map(User => ({
+            _id:User._id,
             username:User.username,
             firstname:User.firstname,
             lastname:User.lastname

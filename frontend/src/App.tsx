@@ -5,16 +5,21 @@ import Signin from "./pages/Signin";
 import Dashboard from "./pages/Dashboard";
 import Send from "./pages/Send";
 import { Toaster } from "react-hot-toast";
+import { Auth } from "./pages/Auth";
 
 function App() {
   return (
     <>
-    <Toaster position="top-center" />
+      <Toaster position="top-center" />
       <Routes>
         <Route path="/" element={<Signup />} />
         <Route path="/signin" element={<Signin />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/send" element={<Send />} />
+        <Route element={<Auth />}>
+          <Route path="/dashboard" element={<Dashboard />} />
+        </Route>
+        <Route element={<Auth/>}>
+          <Route path="/send" element={<Send />} />
+        </Route>
       </Routes>
     </>
   );
