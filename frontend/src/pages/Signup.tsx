@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 const Signup = () => {
+  
   const navigate = useNavigate();
 
   const [signup,setSignup] = useState({
@@ -12,8 +13,6 @@ const Signup = () => {
     username:'',
     password:'',
   })
-
-
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();

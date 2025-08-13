@@ -53,7 +53,7 @@ export const signup = async (req: Request, res: Response) => {
     })
 
 
-    const token = jwt.sign(userId, "ABCDEF123456");
+    const token = jwt.sign(userId, "ABCDEF123456",{expiresIn: "4h"});
 
     res.status(200).json({
       message: "signup successfully",
@@ -80,7 +80,7 @@ export const signin = async (req: Request, res: Response) => {
 
     const userId = user._id.toJSON();
 
-    const token = jwt.sign(userId, "ABCDEF123456");
+    const token = jwt.sign(userId, "ABCDEF123456",{expiresIn:"4h"});
 
     res.status(200).json({
       message: "Signin successfully",

@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 
-
 export const  mongoConnect = () =>{
     mongoose.connect(
       "mongodb+srv://admin:opFnqOlLoQ2hHaS4@cluster0.eydpqwr.mongodb.net/paytm"
